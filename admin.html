@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Admin - Wijaya</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#101318;font-family:Inter,system-ui,sans-serif}
+header{background:#11151a;color:#fff;padding:18px 0}.wrap{width:min(1050px,92%);margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{font-weight:900;letter-spacing:.04em}.brand small{display:block;color:#aeb7c1;font-size:10px;letter-spacing:.16em}
+button,a.btn{border:0;border-radius:999px;padding:11px 16px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;text-decoration:none}.logout{background:#fff;color:#111}
+main{padding:35px 0}.intro{display:flex;justify-content:space-between;gap:15px;align-items:end;margin-bottom:25px}.eyebrow{font-size:11px;letter-spacing:.17em;font-weight:900;color:#168ac4;text-transform:uppercase}
+h1{font-size:34px;letter-spacing:-.04em;margin:5px 0}p{color:#667085}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:22px}.stat,.panel{background:#fff;border:1px solid #e7ebef;border-radius:18px;padding:22px}.stat b{display:block;font-size:30px}.stat span{color:#667085;font-size:13px}
+.layout{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}.panel h2{font-size:20px;margin:0 0 17px}
+label{display:block;font-size:12px;font-weight:800;margin:14px 0 7px}
+input,select{width:100%;padding:13px;border:1px solid #dfe4e9;border-radius:11px;font:inherit;background:white}
+.primary{background:#11151a;color:white;margin-top:17px;width:100%}.secondary{background:#eef1f4;color:#111}.danger{background:#fff0ef;color:#b42318;padding:8px 12px}
+.notice{font-size:12px;line-height:1.6;color:#667085;margin-top:12px}.status{font-size:13px;margin-top:12px;min-height:20px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #edf0f2;border-radius:13px;padding:13px;margin-top:10px}.item strong{display:block;font-size:14px}.item small{color:#667085}
+.actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.empty{padding:25px;text-align:center;color:#667085;background:#f8f9fa;border-radius:12px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.intro{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr 1fr}.item{align-items:flex-start;flex-direction:column}}
+</style></head><body>
+<header><div class="wrap top"><div class="brand">WIJAYA<small>INTERIOR & ADVERTISING · ADMIN</small></div><button class="logout" id="logout">Keluar</button></div></header>
+<main class="wrap"><div class="intro"><div><div class="eyebrow">Dashboard administrator</div><h1>Kelola Video</h1><p>Tambahkan dan atur video yang tampil di website.</p></div><a class="btn secondary" href="index.html">Lihat Website ↗</a></div>
+<div class="stats"><div class="stat"><b id="yt-count">0</b><span>Video YouTube terbit</span></div><div class="stat"><b id="tt-count">0</b><span>Video TikTok terbit</span></div></div>
+<div class="layout"><section class="panel"><h2>Tambah Video</h2>
+<form id="video-form"><label for="category">Kategori</label><select id="category"><option value="youtube">YouTube</option><option value="tiktok">TikTok</option></select>
+<label for="title">Judul video</label><input id="title" maxlength="120" required placeholder="Contoh: Hasil Pengerjaan Interior">
+<label for="url">Link video</label><input id="url" type="url" required placeholder="Tempel link YouTube atau TikTok">
+<button class="primary" id="save" type="submit">Simpan & Terbitkan</button></form>
+<p class="notice">Gunakan link video publik. Untuk TikTok, gunakan link penuh yang memuat /video/ID. Video yang dinonaktifkan atau tidak mengizinkan embed mungkin tidak dapat diputar langsung.</p><div class="status" id="status" role="status"></div></section>
+<section class="panel"><h2>Daftar Video</h2><div id="video-list"><div class="empty">Memuat data video…</div></div></section></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script>
+<script>
+const cfg=window.WIJAYA_SUPABASE||{},saved=sessionStorage.getItem('wijaya_admin_session');
+if(!saved){location.href='login.html';}
+let session=null,client=null;
+try{session=JSON.parse(saved||'null')}catch(e){}
+if(!session||!session.access_token){sessionStorage.removeItem('wijaya_admin_session');location.href='login.html';}
+if(cfg.url&&cfg.anonKey&&window.supabase){client=window.supabase.createClient(cfg.url,cfg.anonKey,{global:{headers:{Authorization:'Bearer '+session.access_token}}});}
+const statusEl=document.getElementById('status'),listEl=document.getElementById('video-list');
+function validVideo(url,cat){
+ try{const u=new URL(url);if(cat==='youtube')return !!(u.hostname.includes('youtube.com')||u.hostname==='youtu.be')&&!!(u.searchParams.get('v')||u.hostname==='youtu.be'||/\/(embed|shorts|live)\//.test(u.pathname));return (u.hostname==='tiktok.com'||u.hostname.endsWith('.tiktok.com'))&&/\/video\/\d+/.test(u.pathname);}catch(e){return false;}
+}
+async function load(){
+ if(!client){listEl.innerHTML='<div class="empty">Konfigurasi Supabase belum lengkap.</div>';return;}
+ const {data,error}=await client.from('videos').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:false});
+ if(error){listEl.textContent='Gagal memuat video: '+error.message;return;}
+ document.getElementById('yt-count').textContent=data.filter(v=>v.category==='youtube'&&v.is_published).length;
+ document.getElementById('tt-count').textContent=data.filter(v=>v.category==='tiktok'&&v.is_published).length;
+ if(!data.length){listEl.innerHTML='<div class="empty">Belum ada video. Tambahkan video pertama Anda.</div>';return;}
+ listEl.innerHTML=data.map(v=>`<div class="item"><div><strong>${escapeHtml(v.title)}</strong><small>${v.category.toUpperCase()} · ${v.is_published?'Terbit':'Disembunyikan'}</small></div><div class="actions"><button class="secondary" data-toggle="${v.id}">${v.is_published?'Sembunyikan':'Terbitkan'}</button><button class="danger" data-delete="${v.id}">Hapus</button></div></div>`).join('');
+ listEl.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggle(b.dataset.toggle,data.find(v=>v.id===b.dataset.toggle)));
+ listEl.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>removeVideo(b.dataset.delete));
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.getElementById('video-form').addEventListener('submit',async e=>{
+ e.preventDefault();statusEl.textContent='';
+ const category=document.getElementById('category').value,title=document.getElementById('title').value.trim(),url=document.getElementById('url').value.trim();
+ if(!validVideo(url,category)){statusEl.textContent=category==='youtube'?'Link YouTube tidak dikenali.':'Link TikTok harus berupa link video penuh yang memuat /video/ID.';return;}
+ const b=document.getElementById('save');b.disabled=true;b.textContent='Menyimpan…';
+ const {error}=await client.from('videos').insert({category,title,url,is_published:true});
+ b.disabled=false;b.textContent='Simpan & Terbitkan';
+ if(error){statusEl.textContent='Gagal menyimpan: '+error.message;return;}
+ e.target.reset();statusEl.textContent='Video berhasil diterbitkan.';load();
+});
+async function toggle(id,v){const {error}=await client.from('videos').update({is_published:!v.is_published}).eq('id',id);if(error)statusEl.textContent=error.message;else load();}
+async function removeVideo(id){if(!confirm('Hapus video ini secara permanen?'))return;const {error}=await client.from('videos').delete().eq('id',id);if(error)statusEl.textContent=error.message;else load();}
+document.getElementById('logout').onclick=async()=>{try{await client?.auth.signOut()}catch(e){}sessionStorage.removeItem('wijaya_admin_session');location.href='login.html';};
+load();
+</script></body></html>

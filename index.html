@@ -91,6 +91,15 @@ form{display:grid;gap:13px}input,textarea{width:100%;padding:15px 16px;border:1p
 .wa{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#20c063;color:#fff;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.2)}
 @media(max-width:900px){.video-grid{grid-template-columns:1fr}.social-box{align-items:flex-start;flex-direction:column}.hero-grid,.about-grid,.contact{grid-template-columns:1fr}.hero{padding-top:130px}.hero-card{min-height:390px}.services{grid-template-columns:1fr 1fr}.portfolio{grid-template-columns:1fr 1fr}.project,.project:nth-child(1),.project:nth-child(4){grid-column:span 1}.stats{grid-template-columns:1fr 1fr}.head{align-items:start;flex-direction:column}.cta-inner{align-items:start;flex-direction:column}}
 @media(max-width:650px){.links{display:none}.menu{display:block}.nav.open .links{display:flex;position:absolute;top:78px;left:0;right:0;background:#fff;padding:20px 4%;flex-direction:column;gap:16px;border-bottom:1px solid var(--line)}.brand img{width:48px;height:48px}.services,.portfolio{grid-template-columns:1fr}.project,.project:nth-child(1),.project:nth-child(4){grid-column:span 1}.hero p{font-size:16px}.section{padding:75px 0}.checks,.stats{grid-template-columns:1fr 1fr}.contact h2{font-size:40px}.footer-inner{flex-direction:column;align-items:flex-start}}
+
+.video-tabs{display:flex;gap:10px;margin:-18px 0 25px;flex-wrap:wrap}
+.video-tab{border:1px solid #dfe4e9;background:#fff;border-radius:999px;padding:11px 19px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;color:#39414a}
+.video-tab.active{background:#11151a;color:#fff;border-color:#11151a}
+.video-empty{padding:25px;border:1px dashed #cbd2da;border-radius:16px;color:#667085;text-align:center}
+.video-card .video-wrap.tiktok{aspect-ratio:9/16;max-width:350px;margin:auto}
+.video-card .video-wrap.tiktok iframe{background:#111}
+.admin-nav-link{font-weight:800}
+
 </style>
 </head>
 <body>
@@ -101,7 +110,7 @@ form{display:grid;gap:13px}input,textarea{width:100%;padding:15px 16px;border:1p
       <div>WIJAYA<small>INTERIOR & ADVERTISING</small></div>
     </a>
     <nav class="links">
-      <a href="#home">Home</a><a href="#about">Tentang</a><a href="#services">Layanan</a><a href="#portfolio">Portofolio</a><a href="#youtube">Video</a><a href="#contact">Kontak</a>
+      <a href="#home">Home</a><a href="#about">Tentang</a><a href="#services">Layanan</a><a href="#portfolio">Portofolio</a><a href="#youtube">Video</a><a href="#contact">Kontak</a><a href="login.html">Login</a>
     </nav>
     <button class="menu" aria-label="Menu">☰</button>
   </div>
@@ -147,15 +156,21 @@ form{display:grid;gap:13px}input,textarea{width:100%;padding:15px 16px;border:1p
 </section>
 
 
+
 <section class="section youtube-section" id="youtube">
   <div class="container">
-    <div class="head"><div><div class="eyebrow">YouTube Portfolio</div><h2>Lihat proses<br>dan hasil pekerjaan kami.</h2></div><p>Saksikan dokumentasi proyek Wijaya Interior & Advertising langsung dari halaman website, atau buka videonya di YouTube.</p></div>
-    <div class="video-grid">
+    <div class="head"><div><div class="eyebrow">Video Wijaya</div><h2>Lihat proses<br>dan hasil pekerjaan kami.</h2></div><p>Saksikan dokumentasi proyek Wijaya Interior & Advertising. Pilih kategori YouTube atau TikTok untuk melihat video.</p></div>
+    <div class="video-tabs" role="tablist" aria-label="Kategori video">
+      <button class="video-tab active" type="button" data-category="youtube">▶ YouTube</button>
+      <button class="video-tab" type="button" data-category="tiktok">♪ TikTok</button>
+    </div>
+    <div class="video-grid" id="public-video-grid" aria-live="polite">
       <article class="video-card"><div class="video-wrap"><iframe src="https://www.youtube.com/embed/GTI3I7Ia_3M" title="Wijaya Interior & Advertising - Video 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><h3>Project Wijaya #01</h3><a href="https://youtu.be/GTI3I7Ia_3M" target="_blank" rel="noopener">Tonton di YouTube ↗</a></div></article>
       <article class="video-card"><div class="video-wrap"><iframe src="https://www.youtube.com/embed/sYbB5Gur4g0" title="Wijaya Interior & Advertising - Video 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><h3>Project Wijaya #02</h3><a href="https://youtu.be/sYbB5Gur4g0" target="_blank" rel="noopener">Tonton di YouTube ↗</a></div></article>
       <article class="video-card"><div class="video-wrap"><iframe src="https://www.youtube.com/embed/AWBHED1D_SU" title="Wijaya Interior & Advertising - Video 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><h3>Project Wijaya #03</h3><a href="https://youtu.be/AWBHED1D_SU" target="_blank" rel="noopener">Tonton di YouTube ↗</a></div></article>
       <article class="video-card"><div class="video-wrap"><iframe src="https://www.youtube.com/embed/6j_cH2C2Jtk" title="Wijaya Interior & Advertising - Video 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="video-info"><h3>Project Wijaya #04</h3><a href="https://youtu.be/6j_cH2C2Jtk" target="_blank" rel="noopener">Tonton di YouTube ↗</a></div></article>
     </div>
+    <p class="video-empty" id="video-empty" hidden>Belum ada video pada kategori ini.</p>
     <div class="social-box">
       <div><div class="eyebrow">Social Media</div><h3>Ikuti Wijaya Interior & Advertising</h3><p>Dokumentasi proyek, proses pengerjaan, dan karya terbaru kami.</p></div>
       <div class="social-actions">
@@ -208,7 +223,7 @@ form{display:grid;gap:13px}input,textarea{width:100%;padding:15px 16px;border:1p
 </main>
 
 <footer class="footer"><div class="container footer-inner"><div class="footer-brand">WIJAYA INTERIOR & ADVERTISING</div><small>© <span id="year"></span> Wijaya Interior & Advertising. All rights reserved.</small></div></footer>
-<a class="wa" href="#contact" aria-label="WhatsApp">WA</a>
+<a class="wa" href="https://wa.me/62812361688" target="_blank" rel="noopener" aria-label="Chat WhatsApp">WA</a>
 
 <script>
 const nav=document.getElementById('nav');
@@ -222,5 +237,66 @@ function sendForm(e){
   window.open(`https://wa.me/62812361688?text=${text}`,'_blank');
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+(async function(){
+  const grid=document.getElementById('public-video-grid');
+  const empty=document.getElementById('video-empty');
+  const tabs=[...document.querySelectorAll('.video-tab')];
+  const fallback=grid.innerHTML;
+  let allVideos=[];
+  const ready=window.WIJAYA_SUPABASE && window.WIJAYA_SUPABASE.url && window.WIJAYA_SUPABASE.anonKey &&
+    !window.WIJAYA_SUPABASE.url.includes('YOUR_') && !window.WIJAYA_SUPABASE.anonKey.includes('YOUR_');
+  if(ready && window.supabase){
+    try{
+      const client=window.supabase.createClient(window.WIJAYA_SUPABASE.url,window.WIJAYA_SUPABASE.anonKey);
+      const {data,error}=await client.from('videos').select('id,title,category,url,created_at').eq('is_published',true).order('sort_order',{ascending:true}).order('created_at',{ascending:false});
+      if(error) throw error;
+      allVideos=data||[];
+    }catch(err){ console.warn('Video database belum tersambung:',err.message); }
+  }
+  function videoId(url,category){
+    if(category==='youtube'){
+      try{
+        const u=new URL(url);
+        if(u.hostname.includes('youtu.be')) return u.pathname.split('/').filter(Boolean)[0]||'';
+        if(u.pathname==='/watch') return u.searchParams.get('v')||'';
+        const m=u.pathname.match(/\/(embed|shorts|live)\/([^/?]+)/);
+        return m?m[2]:'';
+      }catch(e){return '';}
+    }
+    const m=String(url).match(/\/video\/(\d+)/);
+    return m?m[1]:'';
+  }
+  function card(v){
+    const id=videoId(v.url,v.category);
+    if(!id) return '';
+    const isTikTok=v.category==='tiktok';
+    const src=isTikTok?`https://www.tiktok.com/player/v1/${id}?music_info=1&description=1`:`https://www.youtube-nocookie.com/embed/${id}`;
+    const external=isTikTok?`https://www.tiktok.com/@_/video/${id}`:`https://youtu.be/${id}`;
+    const title=String(v.title||'Video Wijaya').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+    return `<article class="video-card"><div class="video-wrap ${isTikTok?'tiktok':''}"><iframe src="${src}" title="${title}" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><div class="video-info"><h3>${title}</h3><a href="${external}" target="_blank" rel="noopener">Tonton di ${isTikTok?'TikTok':'YouTube'} ↗</a></div></article>`;
+  }
+  function show(category){
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.category===category));
+    if(allVideos.length){
+      const list=allVideos.filter(v=>v.category===category);
+      grid.innerHTML=list.map(card).join('');
+      empty.hidden=list.length>0;
+    }else if(category==='youtube'){
+      grid.innerHTML=fallback;
+      empty.hidden=true;
+    }else{
+      grid.innerHTML='';
+      empty.hidden=false;
+    }
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.category)));
+  show('youtube');
+})();
+</script>
+
 </body>
 </html>

@@ -1,0 +1,50 @@
+WIJAYA INTERIOR & ADVERTISING — PAKET PENGEMBANGAN VIDEO & ADMIN
+==================================================================
+
+Isi paket:
+- index.html: website publik, desain dasar dipertahankan, kategori video YouTube/TikTok dan menu Login.
+- Empat video YouTube yang sudah tampil sebelumnya disiapkan sebagai data awal pada SQL agar tetap ada setelah database tersambung.
+- login.html: halaman login admin.
+- admin.html: dashboard untuk tambah, terbitkan, sembunyikan, dan hapus video.
+- supabase-config.js: tempat memasukkan URL project dan anon/publishable key Supabase.
+- supabase-schema.sql: skema database + Row Level Security (RLS).
+- supabase/functions/admin-login/index.ts: fungsi login menggunakan username + password.
+- logo-wijaya.png: logo website.
+
+USERNAME ADMIN YANG DIPILIH
+Arbie@1986
+
+PENTING: paket ini adalah file website dan backend yang disiapkan, belum aktif sebelum project Supabase dibuat dan dikonfigurasi. Jangan mengunggahnya ke GitHub Pages sebelum langkah Supabase selesai. Password tidak disimpan di file website dan jangan dikirim melalui chat.
+
+LANGKAH SETUP (dapat dilakukan bersama-sama):
+1. Buat project Supabase.
+2. Di Authentication > Users, buat SATU akun admin menggunakan email yang Anda miliki dan password yang Anda tentukan sendiri. Email ini menjadi identitas internal Supabase; pengunjung tetap login menggunakan username Arbie@1986.
+3. Salin UUID user admin dari Authentication > Users.
+4. Buka SQL Editor, jalankan seluruh isi supabase-schema.sql. Setelah itu jalankan:
+   insert into public.admin_access (user_id) values ('UUID-USER-ADMIN');
+   Ganti UUID-USER-ADMIN dengan UUID asli.
+5. Deploy Edge Function bernama admin-login dari file supabase/functions/admin-login/index.ts.
+6. Atur function secrets:
+   ADMIN_USERNAME = Arbie@1986
+   ADMIN_AUTH_EMAIL = email akun admin pada langkah 2
+   SUPABASE_URL = URL project (jika belum otomatis tersedia)
+   SUPABASE_ANON_KEY = anon/publishable key project (jika belum otomatis tersedia)
+7. Isi supabase-config.js:
+   url = Project URL
+   anonKey = Publishable/anon key
+   Key ini boleh ada di browser hanya karena RLS aktif. JANGAN pernah memasukkan service_role/secret key ke file website.
+8. Upload index.html, login.html, admin.html, supabase-config.js, logo-wijaya.png ke root repository GitHub Pages.
+   Folder supabase/ dan file supabase-schema.sql adalah bahan backend; tidak perlu diunggah ke root website. Deploy Edge Function melalui Supabase.
+9. Buka login.html, masuk dengan username Arbie@1986 dan password yang dibuat di Supabase.
+10. Tambahkan video YouTube atau TikTok melalui dashboard.
+
+CATATAN LINK VIDEO:
+- YouTube: dukung link youtube.com/watch?v=..., youtu.be/..., shorts, dan embed.
+- TikTok: gunakan link video penuh yang mengandung /video/ID. Link pendek vm.tiktok.com perlu dibuka dahulu dan salin URL video penuh.
+- Video harus publik dan mengizinkan embed. Kebijakan platform dapat membatasi pemutaran di situs luar.
+
+KEAMANAN:
+- Tabel videos memakai RLS; pengunjung hanya dapat membaca video yang diterbitkan.
+- Hanya user UUID yang dimasukkan ke admin_access yang dapat mengelola video.
+- Jangan membuat akun admin kedua atau memberi akses tulis ke anon.
+- Password tidak ditulis di source code.
